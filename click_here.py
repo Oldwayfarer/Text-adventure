@@ -7,8 +7,16 @@ from image_to_ASCII import processer
 from image_to_ASCII import end_safe
 from time import sleep
 
+
 class Player:
-    pass
+    def __init__(self, stren, intel, agil, atten, charis):
+        self.stren = stren
+        self.intel = intel
+        self.agil = agil
+        self.atten = atten
+        self.charis = charis
+        self.money = 15
+        self.inventory = {}
 
 def choice(speach, shift, stdscr):
     choice = 0
@@ -32,27 +40,63 @@ def choice(speach, shift, stdscr):
             return choice
 
 
+def player_creator(stdscr):
+    rem_points = 5
+    points = [5, 5, 5, 5, 5]
+    stdscr.addstr(0, 0, "Skill points: ", curses.A_BOLD)
+    stdscr.addstr(1, 0, "Remaining points: ")
+    stdscr.addstr(2, 0, "<   > Strength")
+    stdscr.addstr(3, 0, "<   > Intellegence")
+    stdscr.addstr(4, 0, "<   > Agillity")
+    stdscr.addstr(5, 0, "<   > Attentiveness")
+    stdscr.addstr(6, 0, "<   > Charisma")
+    stdscr.addstr(7, 0, "Use arrows key to add or substruct points and navigate . Press RETURN when you are ready")
+    stdscr.refresh()
+    position = 0
+    while True:
+        stdscr.addstr(1, 19,' ')
+        stdscr.addstr(1, 18, str(rem_points))
+        for i in range(0, 5):
+            stdscr.addstr(2 + i, 3, " ")
+        for i in range(0, 5):
+            if i == position:
+                stdscr.addstr(2 + i, 2, str(points[i]), curses.A_REVERSE)
+            else:
+                stdscr.addstr(2 + i, 2, str(points[i]))
+        stdscr.refresh()
+        key = stdscr.getch()
+        if key == 259:
+            if position > 0:
+                position -= 1
+        elif key == 258:
+            if position < 4:
+                position += 1
+        elif key == 260:
+            if points[position] > 0:
+                points[position] -= 1
+                rem_points += 1
+        elif key == 261:
+            if points[position] < 10 and rem_points:
+                points[position] += 1
+                rem_points -= 1
+        elif key == ord('\n'):
+            if not rem_points:
+                break
+            else:
+                stdscr.addstr(1, 0, "Remaining points", curses.A_REVERSE)
+        player = Player(points[0],points[1],points[2],points[3],points[4])
+    return player
+                
+
 def main():
     stdscr = curses.initscr()
     stdscr.keypad(True)
     curses.noecho()
     curses.curs_set(0)
 
-    speach1 = [
-        'Ha-ha-ha-ha',
-        'Use dark magic',
-        'Use sword do slain this giant lizard',
-        'By the way, how is your sex life?',
-        'Realise that you don\'t realy need this tresher'
-    ]
-    
-    res = choice(speach1, 20, stdscr)
-    if res >= 0:
-        stdscr.clear()
-        stdscr.addstr(20, 10, "YOU DIED", curses.A_BOLD)
-        stdscr.refresh()
-        sleep(3)
+    player = player_creator(stdscr)
     end_safe(0)
 
+    
 if __name__ == "__main__":
     main()
