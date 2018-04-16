@@ -5,7 +5,9 @@ import json
 from PIL import Image
 from image_to_ASCII import processer
 from image_to_ASCII import end_safe
+from image_to_ASCII import default_ascii_dict
 from time import sleep
+import enemy
 
 
 class Player:
@@ -84,7 +86,7 @@ def player_creator(stdscr):
                 break
             else:
                 stdscr.addstr(1, 0, "Remaining points", curses.A_REVERSE)
-        player = Player(points[0],points[1],points[2],points[3],points[4])
+        player = Player(points[0], points[1], points[2], points[3], points[4])
     return player
                 
 
@@ -93,7 +95,29 @@ def main():
     stdscr.keypad(True)
     curses.noecho()
     curses.curs_set(0)
+    try:
+        logo = Image.open('./Image_Folder/logo.jpg')
+    except FileNotFoundError:
+        end_safe(0)
+        print("Na-Na-Na-Na-Na")
+    width, height = logo.size
 
+    frame = processer(logo.load(), stdscr, width, height, 100, default_ascii_dict, 0, 1)
+    stdscr.addstr(0, 0, "Press any key to continue")
+    if len(frame[0]) > curses.COLS-1:
+        visible_cols = curses.COLS
+    else:
+        visible_cols = len(frame[0])
+    if len(frame) > curses.LINES - 3:
+        visible_lines = curses.LINES - 2
+    else:
+        visible_lines = len(frame)
+    for i in range(0, visible_lines):
+        add = frame[i][0:visible_cols]
+        stdscr.addstr(i+1, 0, add)
+    stdscr.refresh()
+    stdscr.getch()
+    stdscr.clear()
     player = player_creator(stdscr)
     end_safe(0)
 
