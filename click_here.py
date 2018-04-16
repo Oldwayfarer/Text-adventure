@@ -20,8 +20,11 @@ class Player:
         self.money = 15
         self.inventory = {}
 
-def choice(speach, shift, stdscr):
+def choice(message, speach, shift, stdscr):
     choice = 0
+    for i in range(0, len(message)):
+        stdscr.addstr(shift+i, 0, message[i])
+    shift = shift + len(message) + 1
     while True:
         for i in range(0, len(speach)):
             stdscr.addstr(shift + i, 1,"{})".format(i) + speach[i])
@@ -39,6 +42,8 @@ def choice(speach, shift, stdscr):
             if choice < len(speach)-1:
                 choice += 1
         elif key == ord('\n'):
+            stdscr.clear()
+            stdscr.refresh()
             return choice
 
 
@@ -87,6 +92,7 @@ def player_creator(stdscr):
             else:
                 stdscr.addstr(1, 0, "Remaining points", curses.A_REVERSE)
         player = Player(points[0], points[1], points[2], points[3], points[4])
+    stdscr.clear()
     return player
                 
 
@@ -118,7 +124,81 @@ def main():
     stdscr.refresh()
     stdscr.getch()
     stdscr.clear()
+    #small demonstration of capability
+    message = [
+        'You are on the beginning of the greates adventure in your life!',
+        'All you was dreaming about is now just behind this old massive door.',
+        'But at that moment you started to turn over the key inside the lock',
+        'you felt a little chill inside you. Does it really worth it...All',
+        'this place looks crippy'
+        'Do you want to proceed? '
+    ]
+
+    speach = [
+        'Hell! It\'s not a time for a doubts!(Enter the door)',
+        'Well. That\'s all seems like a greate mistake. I\'d better leave'
+    ]  
     player = player_creator(stdscr)
+    res = choice(message, speach, 20, stdscr)
+    stdscr.clear()
+    if res == 0:
+        message = [
+            'You got into the big hall of ancient castle. Spellboud by it\'s splendor',
+            'you have not noticed the small horny creature sneaking behind. It was to',
+            'late when it\'s narrow long tail enveloped your neck and cnocked over you.',
+            'Before you managed do get up the creature rushed over toward your face and ',
+            'And paralised your mind with some sort of a magic coming out of his horns',
+            'It\'s delving inside your head. It want\'s to know who you are...'
+        ]
+        speach =[
+            'Try to resist. GET OUT OFF MY MIND!',
+            'Try to get over the paralysis and take off the creature.',
+            'Let the creature do what it wants'
+        ]
+        res = choice(message, speach, 20, stdscr)
+        if res == 0 and player.intel > 8:
+            message = [
+                'The creature loose in the mind battle and runaway! It\'s no doubght you have a strong mind'
+            ]
+            speach = [
+                'perfect!'
+            ]
+            choice(message, speach, 20, stdscr)
+        elif res == 1 and player.stren > 7:
+            message = [
+                'You have managed to get it of your face! Creature astonishedly pent and disappiar in the darkness'
+            ]
+            speach = [
+                'Nice try!'
+            ]
+            choice(message, speach, 20, stdscr)
+        elif res == 2:
+            message = [
+                'Having satisfied its interest creature leaves. For some time you lay on the ground in full perplexity'
+            ]
+
+            speach = [
+                'Everything mixed up in my head'
+            ]
+            choice(message, speach, 20, stdscr)
+        else:
+            message = [
+                'You have not managed to bit the creature'
+            ]
+
+            speach = [
+                'How can this happen...'
+            ]
+            choice(message, speach, 20, stdscr)
+    if res == 1:
+        message = [
+            'You have left this place and will never know what secrets it keeps'
+        ]
+
+        speach = [
+            'But i will be allive'
+        ]
+        choice(message, speach, 20, stdscr)
     end_safe(0)
 
     
