@@ -8,10 +8,10 @@ class enemy():
         self.charis = charis
         
     def change_stren(self, stren, change):
-        self.stren += change;
+        self.stren += change
         
     def change_intel(self, intel, change):
-        self.intel += change;
+        self.intel += change
         
     def change_agil(self, agil, change):
         self.agil += change
