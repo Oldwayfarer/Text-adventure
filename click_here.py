@@ -19,6 +19,17 @@ class Player:
         self.charis = charis
         self.money = 15
         self.inventory = {}
+        self.insp = 0
+
+    def change_insp(self, insp = -1):
+        if insp < 0:
+            if self.insp > -10:
+                self.insp += insp
+        elif insp > 0:
+            if self.insp < 5:
+                self.insp += insp
+
+
 
 def choice(message, speach, shift, stdscr):
     choice = 0
@@ -155,6 +166,7 @@ def main():
             'Try to get over the paralysis and take off the creature.',
             'Let the creature do what it wants'
         ]
+        player.change_insp(2)
         res = choice(message, speach, 20, stdscr)
         if res == 0 and player.intel > 8:
             message = [
@@ -185,7 +197,7 @@ def main():
             message = [
                 'You have not managed to bit the creature'
             ]
-
+            player.change_insp(-2)
             speach = [
                 'How can this happen...'
             ]
